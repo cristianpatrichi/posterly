@@ -1,0 +1,1486 @@
+:root {
+  --bg: #1f2125;
+  --panel: #2a2d33;
+  --panel-2: #32363d;
+  --line: #3c414a;
+  --text: #e8eaed;
+  --text-dim: #9aa0a8;
+  --accent: #5b8def;
+  --accent-2: #4a7ad6;
+  --danger: #e0574b;
+  --stage-bg: #15171a;
+  --radius: 10px;
+  --shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ----------------------------------------------------------------------- */
+/* App shell                                                               */
+/* ----------------------------------------------------------------------- */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.app-loading {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--text-dim);
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ----------------------------------------------------------------------- */
+/* Toolbar                                                                  */
+/* ----------------------------------------------------------------------- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  flex: 0 0 auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.brand-mark {
+  display: block;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.brand-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.2px;
+}
+
+.brand-tagline {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, opacity 0.12s;
+}
+
+.btn:hover:not(:disabled) {
+  background: #3a3f47;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  background: transparent;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-2);
+}
+
+/* Split download button + menu */
+.download {
+  position: relative;
+}
+
+.split-btn {
+  display: flex;
+}
+
+.split-btn .btn-primary {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.split-caret {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 8px 10px;
+}
+
+.download-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  z-index: 50;
+  min-width: 120px;
+}
+
+.download-menu button {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.download-menu button:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.download-error {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  max-width: 280px;
+  background: rgba(224, 87, 75, 0.15);
+  border: 1px solid var(--danger);
+  color: #ffd7d2;
+  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  z-index: 40;
+}
+
+/* ----------------------------------------------------------------------- */
+/* Error banner                                                            */
+/* ----------------------------------------------------------------------- */
+.banner-error {
+  background: rgba(224, 87, 75, 0.15);
+  border-bottom: 1px solid var(--danger);
+  color: #ffd7d2;
+  padding: 10px 16px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.banner-close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* ----------------------------------------------------------------------- */
+/* Three-column layout                                                     */
+/* ----------------------------------------------------------------------- */
+.layout {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 280px 1fr 300px;
+  min-height: 0;
+}
+
+.panel {
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.panel-right {
+  border-right: none;
+  border-left: 1px solid var(--line);
+}
+
+.panel-heading {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-dim);
+  margin: 0;
+  padding: 16px 16px 10px;
+  flex: 0 0 auto;
+}
+
+/* ----------------------------------------------------------------------- */
+/* Left panel: uploader + strip                                            */
+/* ----------------------------------------------------------------------- */
+.uploader {
+  margin: 0 16px 12px;
+  border: 2px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 22px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  flex: 0 0 auto;
+}
+
+.uploader:hover,
+.uploader-active {
+  border-color: var(--accent);
+  background: rgba(91, 141, 239, 0.08);
+}
+
+.uploader-icon {
+  font-size: 22px;
+  color: var(--accent);
+}
+
+.uploader-text {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.uploader-sub {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.strip-wrap {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 0 8px 16px;
+}
+
+.strip {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.strip-empty {
+  color: var(--text-dim);
+  font-size: 13px;
+  padding: 0 16px;
+}
+
+/* Subtle note shown above the strip when order_mode is "random". */
+.strip-hint {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-dim);
+  margin: 0 16px 10px;
+}
+
+.strip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--panel-2);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.strip-row:hover {
+  border-color: var(--line);
+}
+
+.strip-row-selected {
+  border-color: var(--accent);
+  background: rgba(91, 141, 239, 0.12);
+}
+
+.strip-handle {
+  color: var(--text-dim);
+  cursor: grab;
+  font-size: 14px;
+  padding: 0 2px;
+  touch-action: none;
+}
+
+.strip-handle:active {
+  cursor: grabbing;
+}
+
+.strip-index {
+  font-size: 11px;
+  color: var(--text-dim);
+  width: 16px;
+  text-align: center;
+}
+
+.strip-thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+  flex: 0 0 auto;
+}
+
+.strip-name {
+  font-size: 12px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------------------- */
+/* Center stage / A4 canvas                                                */
+/* ----------------------------------------------------------------------- */
+.stage {
+  position: relative;
+  background: var(--stage-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* Clear "processing" overlay shown while photos upload and the first collage
+   renders, so it's obvious work is happening. */
+.stage-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(21, 23, 26, 0.62);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 60;
+}
+
+.stage-overlay p {
+  margin: 0;
+}
+
+/* ----------------------------------------------------------------------- */
+/* Mobile / narrow screens: stack the three columns so the collage (center) */
+/* is always visible. The desktop layout is a fixed 280px/1fr/300px grid,   */
+/* which collapses the center on a phone.                                   */
+/* ----------------------------------------------------------------------- */
+/* Mobile-only chrome: hidden on desktop, enabled in the max-width:860px block. */
+.mobile-actionbar {
+  display: none;
+}
+.sheet-close {
+  display: none;
+}
+.sheet-backdrop {
+  display: none;
+}
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 860px) {
+  /* Let the whole page scroll instead of locking to the viewport height. */
+  .app {
+    height: auto;
+    min-height: 100%;
+    /* Room so content isn't hidden behind the fixed bottom action bar. */
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Compact, sticky toolbar so the primary actions stay reachable while you
+     scroll. Brand on the first row, actions wrap below it. */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 80;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+  .brand {
+    min-width: 0;
+  }
+  .brand-mark {
+    width: 30px;
+    height: 30px;
+  }
+  .brand-name {
+    font-size: 16px;
+  }
+  .toolbar-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .toolbar-actions .btn {
+    font-size: 12px;
+    padding: 7px 11px;
+  }
+  .toolbar-user {
+    margin-left: auto;
+  }
+  /* The email label eats a whole row on a phone; the Logout button is enough. */
+  .user-email {
+    display: none;
+  }
+
+  /* Stack the three columns, but put the COLLAGE FIRST -- it's the point of the
+     app -- then Photos, then Settings. */
+  .layout {
+    display: flex;
+    flex-direction: column;
+  }
+  .stage {
+    order: 1;
+    height: 56vh;
+    min-height: 300px;
+    padding: 12px;
+  }
+  .panel-left {
+    order: 2;
+  }
+  .panel-right {
+    order: 3;
+  }
+  .panel {
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid var(--line);
+    overflow: visible;
+  }
+
+  /* Slimmer upload zone + headings since they now sit below the collage. */
+  .uploader {
+    padding: 14px 12px;
+  }
+  .panel-heading {
+    padding: 12px 16px 8px;
+  }
+  /* Always show the per-collage delete button on phones (no hover). */
+  .history-del {
+    opacity: 1;
+  }
+  /* Roomier tap targets in the My-collages grid. */
+  .history-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  /* Photos as a horizontal, swipeable strip of thumbnail tiles. */
+  .strip-wrap {
+    overflow: visible;
+    padding: 0 12px 4px;
+  }
+  .strip {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .strip-row {
+    flex: 0 0 auto;
+    flex-direction: column;
+    width: 64px;
+    padding: 6px;
+    gap: 0;
+  }
+  .strip-handle,
+  .strip-index,
+  .strip-name {
+    display: none;
+  }
+  .strip-thumb {
+    width: 50px;
+    height: 50px;
+  }
+
+  /* Settings becomes a slide-up bottom sheet (toggled from the action bar). */
+  .panel-right {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 86vh;
+    transform: translateY(105%);
+    transition: transform 0.25s ease;
+    z-index: 95;
+    border: none;
+    border-top: 1px solid var(--line);
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -12px 34px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+  }
+  .panel-right.sheet-open {
+    transform: translateY(0);
+  }
+  .sheet-head {
+    padding-right: 12px;
+  }
+  .sheet-close {
+    display: inline-block;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    background: none;
+    border: none;
+    padding: 8px 10px;
+    cursor: pointer;
+  }
+  .sheet-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 94;
+  }
+
+  /* Fixed bottom action bar: thumb-reachable Add / Shuffle / Download / Settings. */
+  .mobile-actionbar {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 70;
+    background: var(--panel);
+    border-top: 1px solid var(--line);
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+    gap: 4px;
+  }
+  .mab-btn {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: none;
+    border: none;
+    border-radius: 10px;
+    padding: 6px 2px;
+    cursor: pointer;
+  }
+  .mab-btn:disabled {
+    opacity: 0.4;
+  }
+  .mab-ico {
+    font-size: 19px;
+    line-height: 1;
+  }
+  .mab-primary {
+    color: #fff;
+    background: var(--accent);
+  }
+}
+
+.canvas-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  /* Become a size query container so the sheet can compute a true "contain"
+     fit from BOTH our width and height via cqw/cqh units below. */
+  container-type: size;
+}
+
+.canvas-sheet {
+  position: relative;
+  /* Contain the A4 sheet inside the stage while preserving its aspect ratio.
+     The box has no in-flow content (all photos are position:absolute), so a
+     bare aspect-ratio would collapse it to 0. We give it a definite width of
+     min(container width, container height * aspect) — exact "contain" for any
+     orientation — and let aspect-ratio derive the height. --ar is set inline. */
+  --ar: 1.4142;
+  --frame: 0.8cqw;
+  width: min(100cqw, calc(100cqh * var(--ar)));
+  aspect-ratio: var(--ar);
+  max-width: 100%;
+  max-height: 100%;
+  /* Become a query container too, so the photos' --frame/--glow cqw units are
+     relative to the SHEET width and scale exactly like the export does on A4. */
+  container-type: size;
+  border-radius: 4px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* Preview-only dashed margin guide (toggle + mm in the settings panel). Inset
+   from the paper edges; drawn above the photos but below the peek/handle layers.
+   Purely a UI overlay -- the server export never draws it. */
+.canvas-margin-guide {
+  position: absolute;
+  pointer-events: none;
+  border: 1.5px dashed var(--accent, #5b8def);
+  border-radius: 2px;
+  /* faint halo so the dashes read on both light and dark backgrounds */
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  z-index: 1800;
+}
+
+.canvas-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.4);
+  text-align: center;
+  padding: 24px;
+}
+
+.canvas-empty-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.canvas-empty-sub {
+  font-size: 13px;
+  margin: 6px 0 0;
+}
+
+/* A placed photo. Geometry (left/top/size/transform/z-index) is set inline.
+   The box is the photo CONTENT area (matches the backend's normalized box); the
+   white print card is drawn OUTSIDE it via ::before, exactly like the renderer
+   adds the border around the fitted photo. */
+.photo {
+  position: absolute;
+  cursor: grab;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.photo:active {
+  cursor: grabbing;
+}
+
+/* White print card behind every photo, extending --frame beyond the content box
+   (the renderer's white border) with a soft drop shadow. */
+.photo::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--frame));
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+  box-shadow: 0 0.5cqw 1.4cqw rgba(0, 0, 0, 0.35);
+  z-index: -1;
+}
+
+.photo-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* Mimic the backend ImageOps.fit(centering=(0.5, 0.45)) crop. */
+  object-fit: cover;
+  object-position: 50% 45%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* soft-oval look: a feathered ellipse vignette fading into the white card,
+   approximating the renderer's gaussian-blurred oval mask + white glow. The
+   radial mask makes the corners reveal the card; --fin/--fout (set on the sheet
+   from the feather slider) control how soft the fade is. */
+.photo-oval .photo-img {
+  /* Oval crop (closest-side ellipse). --fin/--fout (set per photo from feather)
+     control the soft edge: a thin fade at the minimum (crisp oval, the photo
+     fully visible inside it) widening into a soft glow as feather rises. */
+  -webkit-mask-image: radial-gradient(
+    ellipse closest-side at 50% 50%,
+    #000 var(--fin, 90%),
+    transparent var(--fout, 100%)
+  );
+  mask-image: radial-gradient(
+    ellipse closest-side at 50% 50%,
+    #000 var(--fin, 90%),
+    transparent var(--fout, 100%)
+  );
+}
+
+.photo-oval::before {
+  /* fade the white card's hard rectangle edge a touch under the oval glow */
+  box-shadow: 0 0.5cqw 1.6cqw rgba(0, 0, 0, 0.32);
+}
+
+/* Selection indicator — separate from look styling. */
+.photo-selected {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.photo-ring {
+  position: absolute;
+  inset: -4px;
+  border: 1px dashed rgba(91, 141, 239, 0.7);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.photo-peek-layer {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.46);
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 1px rgba(91, 141, 239, 0.16),
+    0 0.35cqw 1.2cqw rgba(0, 0, 0, 0.22);
+  pointer-events: none;
+  z-index: 1900;
+  -webkit-backdrop-filter: blur(8px) saturate(1.18);
+  backdrop-filter: blur(8px) saturate(1.18);
+}
+
+.photo-peek-layer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.08)),
+    rgba(91, 141, 239, 0.1);
+  z-index: 1;
+}
+
+.photo-peek-layer img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: 50% 45%;
+  opacity: 0.26;
+  filter: saturate(0.8) contrast(0.9);
+}
+
+.photo-controls-layer {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 2000;
+}
+
+.photo-corner-handle {
+  position: absolute;
+  width: clamp(26px, 3.4cqw, 34px);
+  height: clamp(26px, 3.4cqw, 34px);
+  min-width: 26px;
+  min-height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--accent, #5b8def);
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.16),
+    0 4px 12px rgba(16, 24, 40, 0.2),
+    inset 0 0 0 1.5px rgba(91, 141, 239, 0.85);
+  cursor: grab;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(var(--handle-x, 0), var(--handle-y, 0)) scale(0.85);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease,
+    color 120ms ease;
+  touch-action: none;
+}
+
+.photo-corner-handle .handle-icon {
+  width: 56%;
+  height: 56%;
+  display: block;
+  pointer-events: none;
+}
+
+.photo-corner-handle:hover,
+.photo-corner-handle:focus-visible {
+  background: var(--accent, #5b8def);
+  color: #fff;
+  box-shadow:
+    0 0 0 3px rgba(91, 141, 239, 0.24),
+    0 4px 14px rgba(16, 24, 40, 0.26);
+  outline: none;
+}
+
+.photo-corner-handle:active {
+  cursor: grabbing;
+}
+
+/* The controls layer only renders for the selected photo and paints above all
+   photos, so its handles are always visible and grabbable -- even when another
+   photo overlaps this one. */
+.photo-controls-layer .photo-corner-handle {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(var(--handle-x), var(--handle-y)) scale(1);
+}
+
+.photo-controls-layer .photo-corner-handle:hover,
+.photo-controls-layer .photo-corner-handle:active {
+  transform: translate(var(--handle-x), var(--handle-y)) scale(1.08);
+}
+
+/* Rotate: top-right corner; icon stays upright regardless of photo rotation. */
+.photo-rotate-handle {
+  top: calc(-1 * var(--frame));
+  right: calc(-1 * var(--frame));
+  --handle-x: 46%;
+  --handle-y: -46%;
+  cursor: grab;
+}
+
+.photo-rotate-handle .handle-icon {
+  transform: rotate(var(--photo-rotation, 0deg));
+}
+
+/* Resize: bottom-left corner; the double arrow lies along the photo's NE-SW
+   diagonal -- it follows the photo's rotation, and -45deg turns the horizontal
+   glyph into the "/" diagonal. */
+.photo-resize-handle {
+  bottom: calc(-1 * var(--frame));
+  left: calc(-1 * var(--frame));
+  --handle-x: -46%;
+  --handle-y: 46%;
+  cursor: nesw-resize;
+}
+
+.photo-resize-handle .handle-icon {
+  transform: rotate(-45deg);
+}
+
+@media (pointer: coarse) {
+  .photo-corner-handle {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    min-height: 34px;
+  }
+}
+
+/* ----------------------------------------------------------------------- */
+/* Right panel: settings                                                   */
+/* ----------------------------------------------------------------------- */
+.panel-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 0 16px 24px;
+}
+
+.panel-section {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.panel-section:last-child {
+  border-bottom: none;
+}
+
+.panel-selected {
+  background: rgba(91, 141, 239, 0.06);
+  margin: 0 -16px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--accent);
+}
+
+.panel-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  margin: 0 0 12px;
+}
+
+/* Small, unobtrusive helper note inside a settings section. */
+.panel-hint {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-dim);
+  margin: 0 0 12px;
+}
+
+.field {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.field-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.field-value {
+  color: var(--text-dim);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Segmented toggle */
+.segmented {
+  display: flex;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.seg-btn {
+  flex: 1;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 6px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.seg-btn-on {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Color + numeric inputs */
+.color-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+input[type="color"] {
+  width: 40px;
+  height: 34px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  cursor: pointer;
+}
+
+.color-text,
+.num-input {
+  flex: 1;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  width: 100%;
+}
+
+.color-text:focus,
+.num-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Margin-guide control: [✓ Show] [ 10 ] mm */
+.guide-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.guide-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.guide-toggle input {
+  cursor: pointer;
+}
+
+.guide-mm {
+  width: 5.5em;
+  flex: 0 0 auto;
+}
+
+.guide-mm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.guide-unit {
+  font-size: 13px;
+  color: var(--muted, #8a8f98);
+}
+
+/* Selected-photo buttons */
+.btn-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mini-btn {
+  flex: 1;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 8px 6px;
+  cursor: pointer;
+}
+
+.mini-btn:hover {
+  background: #3a3f47;
+  border-color: var(--accent);
+}
+
+.mini-btn-wide {
+  width: 100%;
+}
+
+.mini-btn-danger {
+  color: #ffd7d2;
+  border-color: rgba(224, 87, 75, 0.5);
+}
+
+.mini-btn-danger:hover {
+  background: rgba(224, 87, 75, 0.18);
+  border-color: var(--danger);
+}
+
+/* ----------------------------------------------------------------------- */
+/* Right-click context menu                                                 */
+/* ----------------------------------------------------------------------- */
+.context-menu {
+  position: fixed;
+  z-index: 100;
+  min-width: 200px;
+  padding: 6px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.context-menu-head {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  padding: 4px 10px 6px;
+}
+
+.context-menu-sep {
+  height: 1px;
+  background: var(--line);
+  margin: 5px 4px;
+}
+
+.ctx-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.ctx-item:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.ctx-item-danger {
+  color: #ffb3ab;
+}
+
+.ctx-item-danger:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* ----------------------------------------------------------------------- */
+/* Auth: login screen                                                       */
+/* ----------------------------------------------------------------------- */
+.login-screen {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: radial-gradient(1200px 600px at 50% -10%, #2a2d33, var(--bg));
+}
+
+.login-card {
+  width: 340px;
+  max-width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 28px 26px;
+  text-align: center;
+}
+
+.login-logo {
+  width: 56px;
+  height: 56px;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.login-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.login-sub {
+  margin: 6px 0 20px;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.login-google {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+/* Cloudflare Turnstile widget (only present when configured). */
+.turnstile {
+  display: flex;
+  justify-content: center;
+  min-height: 65px;
+  margin-bottom: 16px;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-dim);
+  font-size: 12px;
+  margin: 6px 0 16px;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login-form input {
+  font: inherit;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 11px 12px;
+  text-align: center;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.login-submit {
+  width: 100%;
+}
+
+.login-info {
+  margin: 14px 0 0;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.login-error {
+  margin: 12px 0 0;
+  color: #ffb3ab;
+  font-size: 13px;
+}
+
+/* ----------------------------------------------------------------------- */
+/* Toolbar user group                                                       */
+/* ----------------------------------------------------------------------- */
+.toolbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 8px;
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
+}
+
+.user-email {
+  font-size: 12px;
+  color: var(--text-dim);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------------------- */
+/* Modal + history grid                                                     */
+/* ----------------------------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 90;
+  padding: 24px;
+}
+
+.modal {
+  width: 720px;
+  max-width: 100%;
+  max-height: 80vh;
+  overflow: auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 18px 20px 22px;
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.modal-head h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.modal-empty {
+  color: var(--text-dim);
+  font-size: 14px;
+  padding: 24px 0;
+  text-align: center;
+}
+
+.history-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.history-card {
+  position: relative;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.12s, transform 0.12s;
+}
+
+.history-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.history-thumb {
+  aspect-ratio: 4 / 3;
+  background: var(--stage-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.history-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.history-thumb-empty {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.history-meta {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.history-date {
+  color: var(--text-dim);
+}
+
+.history-del {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border-radius: 7px;
+  padding: 4px 7px;
+  cursor: pointer;
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+
+.history-card:hover .history-del {
+  opacity: 1;
+}
+
+/* Touch devices have no hover, so always show the delete button there. */
+@media (hover: none) {
+  .history-del {
+    opacity: 1;
+  }
+}
+
+.modal-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

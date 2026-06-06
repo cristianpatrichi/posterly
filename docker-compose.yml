@@ -1,0 +1,117 @@
+services:
+  collage:
+    build:
+      context: .
+      args:
+        # Google client id is baked into the SPA at build time (Vite). Defaults
+        # to the runtime GOOGLE_CLIENT_ID so one var configures both.
+        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+        # Branding, baked at build time. Default is "Posterly"; set BRAND_NAME /
+        # BRAND_TAGLINE in .env to override with your own brand.
+        VITE_BRAND_NAME: ${BRAND_NAME:-Posterly}
+        VITE_BRAND_TAGLINE: ${BRAND_TAGLINE:-}
+        # Cloudflare Turnstile site key, baked into the SPA (anti-bot on login).
+        # Empty => the widget isn't rendered and the backend skips verification.
+        VITE_TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}
+    # Named so the cleanup cron reuses the exact same image (built once).
+    image: posterly:local
+    # Host port is bound to localhost; a TLS reverse proxy (Caddy/Cloudflare/
+    # nginx) terminates HTTPS and forwards here. The proxy container reaches the
+    # app via the compose network as `collage:8787` regardless of this mapping.
+    ports:
+      - "127.0.0.1:8787:8787"
+    volumes:
+      - ./data:/data
+    environment:
+      COLLAGE_DATA_DIR: /data
+      # Local timezone for export-filename timestamps (needs tzdata, baked in).
+      TZ: ${TZ:-Europe/Bucharest}
+      APP_ORIGIN: ${APP_ORIGIN:?set APP_ORIGIN in .env, e.g. https://collage.example.com}
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET in .env (32+ random bytes)}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      # Cloudflare Turnstile secret (server-side siteverify). Empty => disabled.
+      TURNSTILE_SECRET: ${TURNSTILE_SECRET:-}
+      # Brand name used in the OTP email (subject + body). Default "Posterly".
+      BRAND_NAME: ${BRAND_NAME:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      RESEND_FROM: ${RESEND_FROM:-Posterly <onboarding@resend.dev>}
+      COOKIE_SECURE: ${COOKIE_SECURE:-}
+      EXTRA_ORIGINS: ${EXTRA_ORIGINS:-}
+      INCLUDE_DEV_ORIGINS: ${INCLUDE_DEV_ORIGINS:-}
+      EXTRA_TRUSTED_HOSTS: ${EXTRA_TRUSTED_HOSTS:-}
+      OTP_DEV_EXPOSE: ${OTP_DEV_EXPOSE:-}
+      ENABLE_DOCS: ${ENABLE_DOCS:-}
+      SESSION_TTL_SECONDS: ${SESSION_TTL_SECONDS:-}
+      SESSION_REFRESH_THRESHOLD_SECONDS: ${SESSION_REFRESH_THRESHOLD_SECONDS:-}
+      MAX_FILES_PER_UPLOAD: ${MAX_FILES_PER_UPLOAD:-}
+      MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-}
+      MAX_UPLOAD_REQUEST_BYTES: ${MAX_UPLOAD_REQUEST_BYTES:-}
+      MAX_IMAGE_MEGAPIXELS: ${MAX_IMAGE_MEGAPIXELS:-}
+      MAX_EXPORT_MEGAPIXELS: ${MAX_EXPORT_MEGAPIXELS:-}
+    # Defense in depth: forbid privilege escalation; the image already runs as a
+    # non-root user (S-003).
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+  # Retention cron: deletes collages untouched for RETENTION_DAYS (default 60),
+  # plus stale OTP/temp files, once a day. Reuses the app image + ./data volume.
+  # Set RETENTION_DAYS=0 to keep collages forever (still purges OTP/temp).
+  cleanup:
+    image: posterly:local
+    depends_on:
+      - collage
+    volumes:
+      - ./data:/data
+    environment:
+      COLLAGE_DATA_DIR: /data
+      TZ: ${TZ:-Europe/Bucharest}
+      RETENTION_DAYS: ${RETENTION_DAYS:-60}
+      CLEANUP_INTERVAL_SECONDS: ${CLEANUP_INTERVAL_SECONDS:-86400}
+    command:
+      - sh
+      - -c
+      - 'while true; do python -m backend.app.cleanup; sleep "${CLEANUP_INTERVAL_SECONDS:-86400}"; done'
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+  # Optional auto-HTTPS reverse proxy. Enable with:
+  #   CADDY_DOMAIN=collage.example.com docker compose --profile proxy up -d --build
+  # (Needs public DNS for the domain pointing here + ports 80/443 open.)
+  caddy:
+    image: caddy:2
+    profiles: ["proxy"]
+    depends_on:
+      - collage
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      # Set CADDY_DOMAIN in .env when using `--profile proxy`.
+      CADDY_DOMAIN: ${CADDY_DOMAIN:-}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+
+  # Optional Cloudflare Tunnel for quick deploy (no open ports / public IP).
+  #   1) Zero Trust dashboard -> Tunnels -> create -> copy the token.
+  #   2) Add a public hostname routing to: http://collage:8787
+  #   3) TUNNEL_TOKEN=... docker compose --profile cloudflare up -d
+  # Set APP_ORIGIN to the tunnel's https URL. Reaches the app over the compose
+  # network as collage:8787 (no host port needed).
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    profiles: ["cloudflare"]
+    depends_on:
+      - collage
+    command: ["tunnel", "--no-autoupdate", "run"]
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,28 @@
+# Auto-HTTPS reverse proxy for the collage app (optional; `--profile proxy`).
+# Caddy obtains/renews a Let's Encrypt certificate automatically for CADDY_DOMAIN.
+
+# Global options: give large uploads time to stream through the proxy.
+{
+	servers {
+		timeouts {
+			read_body 300s
+			write 300s
+		}
+	}
+}
+
+{$CADDY_DOMAIN} {
+	encode zstd gzip
+
+	# Edge body limit: reject huge request bodies before they reach the app
+	# (S-002). The UI sends ~15 MB batches and a large photo alone; 50 MB matches
+	# MAX_UPLOAD_REQUEST_BYTES and leaves room for one 40 MB photo plus multipart
+	# overhead. Lower BOTH this and the app caps together for stricter deployments.
+	# (If you front the app with Nginx Proxy Manager instead, set the equivalent
+	# `client_max_body_size 50m;` on the proxy host.)
+	request_body {
+		max_size 50MB
+	}
+
+	reverse_proxy collage:8787
+}
