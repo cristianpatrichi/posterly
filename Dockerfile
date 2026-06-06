@@ -3,7 +3,7 @@
 # --------------------------------------------------------------------------- #
 # Stage 1: build the React/Vite frontend.
 # --------------------------------------------------------------------------- #
-FROM node:22-alpine AS frontend
+FROM node:26-alpine AS frontend
 WORKDIR /frontend
 
 # Install deps first (cached unless the lockfile changes).
