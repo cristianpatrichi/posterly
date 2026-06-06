@@ -1,0 +1,42 @@
+# Keep the build context small and avoid cache busting on host-only artifacts.
+
+# Python virtualenv / caches
+.venv
+**/__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+
+# Version control
+.git
+.gitignore
+
+# Local environment files may contain production credentials. Compose reads the
+# root .env before the build; Docker never needs it in the build context.
+**/.env*
+
+# Runtime data (mounted as a volume at /data; never bake into the image)
+data/
+
+# Node / frontend build artifacts (frontend is rebuilt inside the image)
+node_modules
+frontend/node_modules
+frontend/dist
+*.tsbuildinfo
+
+# Generated sample collage outputs
+collage-a4-print.png
+collage-a4-print.pdf
+
+# Docs, sample photos and tests are not needed in the image
+docs/
+poze/
+tests/
+
+# Tooling / editor / OS
+.DS_Store
+
+# The Docker files themselves don't belong in the context
+Dockerfile
+.dockerignore
+docker-compose.yml

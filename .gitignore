@@ -1,0 +1,43 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+
+# Node / frontend build
+node_modules/
+frontend/dist/
+backend/app/static/
+*.tsbuildinfo
+
+# Secrets / local env (never commit). Keep the .env.example template.
+.env
+.env.*
+!.env.example
+
+# Runtime data (project folders, uploads, exports, allow-list). Keep the example.
+data/*
+!data/allowed_emails.txt.example
+
+# Generated collage outputs (any *-a4-print.png/pdf at the repo root)
+*-a4-print.png
+*-a4-print.pdf
+
+# Local-only photos (bring your own; never publish personal images)
+poze/
+
+# Private/local tooling & notes (not part of the public repo)
+qa/
+docs/superpowers/
+security_best_practices_report.md
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+*.log
