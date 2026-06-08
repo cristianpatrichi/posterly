@@ -3,7 +3,7 @@
 # --------------------------------------------------------------------------- #
 # Stage 1: build the React/Vite frontend.
 # --------------------------------------------------------------------------- #
-FROM node:22-alpine AS frontend
+FROM node:26-alpine AS frontend
 WORKDIR /frontend
 
 # Install deps first (cached unless the lockfile changes).
@@ -28,7 +28,7 @@ RUN npm run build
 # --------------------------------------------------------------------------- #
 # Stage 2: Python runtime serving the API + the built SPA.
 # --------------------------------------------------------------------------- #
-FROM python:3.12-slim AS runtime
+FROM python:3.14-slim AS runtime
 WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1 \
